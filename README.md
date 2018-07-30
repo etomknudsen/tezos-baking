@@ -1,6 +1,6 @@
 ## Tezos baking tools to ease a bakers life<br>Focus on uptime and ease of use / monitoring
 
-If you own tezos tokens (XTZ), you want them to work for the tezos network and ecosystem. 
+If you own Tezos tokens (XTZ), you want them to work for the Tezos network and ecosystem. 
 It is a fun challenge and you will be rewarded for doing it. The more individual bakers we have in the Tezos ecosystem the more decentralized and resilient Tezos will become.  
 
 Granted, it takes a little bit of work - but good guides exist and I think you will find it worth while. This repository focuses on getting you maximal uptime and ease of use once you have installed your node(s) and - if you use one - gotten your ledger to work. 
@@ -29,7 +29,7 @@ The individual files for a full bakery are outlined below. You can copy and past
   
 #### tezos-node.service
 
-First we want to set up the service to run our tezos node. The below example includes running over VPN - you dont have to, just remove the `openvpn-client@<vpnprovider>.service` under the `[Unit]` both for `Wants` and `After`. 
+First we want to set up the service to run our Tezos node. The below example includes running over VPN - you dont have to, just remove the `openvpn-client@<vpnprovider>.service` under the `[Unit]` both for `Wants` and `After`. 
 
 At the `ExecStart` line you can place whatever command you normally use to start your node - just dont use nohub etc. You can (& should) change your `user`and `group` to whatever you use on your system. I control my nodes in a simple config.json - but the below should work with default settings all over. 
 
@@ -203,7 +203,7 @@ The above configurations work for both front end nodes and for baking/endorsing/
 
 ### Restarting your Tezos operations automatically
 
-Above, we use `Restart:on-failure`. You could use `Restart:always` - I just haven't found it neccessary and there is a slight risk that - if combinded with loose restart settings - could exhaust your system. But feel free to try it out if it'll make you sleep better at night. Now that you have all your tezos operations 'servicified' you can indeed start sleeping at night again, without loosing out on your baking and endorsing slots.
+Above, we use `Restart:on-failure`. You could use `Restart:always` - I just haven't found it neccessary and there is a slight risk that - if combinded with loose restart settings - could exhaust your system. But feel free to try it out if it'll make you sleep better at night. Now that you have all your Tezos operations 'servicified' you can indeed start sleeping at night again, without loosing out on your baking and endorsing slots.
 
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
