@@ -1,0 +1,19 @@
+# The Tezos Accuser service (part of systemd)
+# file: /etc/systemd/system/tezos-accuser.service 
+
+[Unit]
+Description     = Tezos Accuser Service
+Wants           = network-online.target openvpn-client@<vpnprovider>.service 
+BindsTo		= tezos-node.service
+After           = tezos-node.service
+
+[Service]
+User            = baker
+Group		= baker
+WorkingDirectory= /home/baker/
+ExecStartPre	= /bin/sleep 1
+ExecStart       = /home/baker/tezos/tezos-accuser-002-PsYLVpVv run
+Restart         = on-failure
+
+[Install]
+WantedBy	= multi-user.target

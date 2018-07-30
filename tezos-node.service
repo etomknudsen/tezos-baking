@@ -1,0 +1,19 @@
+# The Tezos Node service (part of systemd)
+# file: /etc/systemd/system/tezos-node.service 
+
+[Unit]
+Description     = Tezos Node Service
+Documentation	= http://doc.tzalpha.net/
+Wants           = network-online.target openvpn-client@<vpnprovider>.service
+After           = network-online.target openvpn-client@<vpnprovider>.service 
+
+[Service]
+User            = baker
+Group		= baker
+WorkingDirectory= /home/baker/
+ExecStart	= /home/baker/tezos/tezos-node run --bootstrap-threshold=1
+Restart         = on-failure
+
+[Install]
+WantedBy	= multi-user.target
+RequiredBy	= tezos-baker.service tezos-endorser.service tezos-accuser.service
