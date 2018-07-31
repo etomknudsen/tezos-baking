@@ -88,7 +88,7 @@ We can restart it after having replaced the pia.conf file, e.g. to start baking 
 
 We can monitor it:<br>`sudo systemctl status openvpn-client@pia.service`
 
-We can disable it so it doesn't load at boot time:<br>`sudo systemctl stop openvpn-client@pia.service`
+We can disable it so it doesn't load at boot time:<br>`sudo systemctl disable openvpn-client@pia.service`
 
 ### With these few simple steps you have just enhanced the resilience of your Tezos node/baker. 
 
