@@ -130,8 +130,6 @@ Wants           = network-online.target
 After           = tezos-node.service
 
 [Service]
-User            = baker
-Group		= baker
 WorkingDirectory= /home/baker/
 ExecStart       = /home/baker/tezos-node-cpr.sh
 Restart         = on-failure
