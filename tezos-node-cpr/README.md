@@ -1,6 +1,6 @@
 ## Tezos Node CPR
 
-Rarely, your Tezos node may need cardiopulmonary resuscitation (CPR) - or simply a restart - to function probably. 
+Rarely, your Tezos node may need cardiopulmonary resuscitation (CPR) - or simply a restart - to function properly. 
 One reason could be a prolonged period without network connectivity. 
 
 #### Below is a script to help you automate this process. 
