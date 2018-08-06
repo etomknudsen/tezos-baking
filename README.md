@@ -9,13 +9,13 @@ To spin up a node use this excellent guide: https://github.com/tezoscommunity/FA
 
 To get your Ledger Nano S to work with Tezos follow this excellent guide: https://github.com/obsidiansystems/ledger-app-tezos/blob/master/README.md
 
-## Using systemd to control you node, baker, endorser and accuser
+## Using systemd to control your node, baker, endorser and accuser
 
 If you are not familiar with "services" or systemd there is a good intro here: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
 
 Briefly, what we want is a stable system with maximal uptime in return for minimal intervention. As such we need a tezos node that starts itself once the system boots and a baker/endorser/accuser that is always on and ready to bake/endorse/accuse. `systemd` can easily help us achieve this. 
 
-Below you'll find the config files for such a system together with somne explanation of how it works. 
+Below you'll find the config files for such a system together with some explanation of how it works. 
 
 Basically, for a full bakery we want to configure and (auto-)run four services
 - [x] Tezos Node
