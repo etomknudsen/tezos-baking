@@ -117,6 +117,9 @@ fi
 #### You may want to tailor your own restart command(s)
 For that you just edit the section with the current restart command `systemctl reload-or-restart tezos-node` and change it to whatever you want.
 
+*Remember: you need to run this as a user priviledge enough to control systemd (e.g. root) if you have installed it as a service*
+*If you do it manually you can run it as the same user you run your Tezos node as*
+
 ### Running the script
 You would want to make sure the script is running. You can start it manually `./tezos-node-cpr.sh` (after having done `chmod +x tezos-node-cpr.sh`, as a cron job or install it as a service. For the latter you would want to do a service that looks something like this:
 
