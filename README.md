@@ -39,7 +39,7 @@ At the `ExecStart` line you can place whatever command you normally use to start
 
 [Unit]
 Description     = Tezos Node Service
-Documentation	= http://doc.tzalpha.net/
+Documentation   = http://tezos.gitlab.io/betanet/
 Wants           = network-online.target openvpn-client@<vpnprovider>.service
 After           = network-online.target openvpn-client@<vpnprovider>.service 
 
