@@ -115,7 +115,7 @@ fi
 ```
 
 ### Running the script
-You would want to make sure the script is running. You can start it manually, as a cron job or install it as a service. For the latter you would want to do a service that looks something like this:
+You would want to make sure the script is running. You can start it manually `./tezos-node-cpr.sh` (after having done `chmod +x tezos-node-cpr.sh`, as a cron job or install it as a service. For the latter you would want to do a service that looks something like this:
 
 ```
 # The Tezos Node CPR service (part of systemd)
