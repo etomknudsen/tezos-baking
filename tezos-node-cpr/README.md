@@ -97,7 +97,7 @@ if [ $(rpcserverrunning) ]; then
 				# Network OK. No p2p activity. Old block header. Restarting node. But check connection first
 				if [ $(networkconnected) ] && [ $(pingconnected) ] && [ $(internetconnected) ] ; then				
 					echo $(log "Network OK. No p2p activity. Too long ($(getTimeSinceLastBlock) secs) since last block. Restarting node!")
-					systemctl reload-or-restart tezos-node
+					systemctl reload-or-restart tezos-node.service
 					P2P_TX_TOTAL=0
 					sleep $TIME_TO_WAIT_AFTER_RESTART
 				else
@@ -115,7 +115,7 @@ fi
 ```
 
 #### You may want to tailor your own restart command(s)
-For that you just edit the section with the current restart command `systemctl reload-or-restart tezos-node` and change it to whatever you want.
+For that you just edit the section with the current restart command `systemctl reload-or-restart tezos-node.service` and change it to whatever you want.
 
 *Remember: you need to run this as a user priviledge enough to control systemd (e.g. root) if you have installed it as a service*
 *If you do it manually you can run it as the same user you run your Tezos node as*
@@ -129,7 +129,7 @@ You would want to make sure the script is running. You can start it manually `./
 
 [Unit]
 Description     = Tezos Node Moitoring and Restarting Service
-Wants           = network-online.target 
+Wants           = network-online.target tezos-node.service
 After           = tezos-node.service
 
 [Service]
