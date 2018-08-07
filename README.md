@@ -207,5 +207,7 @@ Above, we use `Restart:on-failure`. You could use `Restart:always` - I just have
 
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
+I've now been asked repeatedly for a donation address. Just glad to help, and donations are not expected. If you feel you want to anyway you can use: tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL
+
 Enjoy!
 
