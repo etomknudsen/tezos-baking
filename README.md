@@ -199,7 +199,7 @@ And you can stop the baker/endorser/accuser individually if you want.
 
 ### Using front-end nodes and a private baker
 
-The above configurations work for both front end nodes and for baking/endorsing/accusing nodes. If you want to use this (I recommend you do) this for your front-end nodes too, simply remove the line `RequiredBy	= tezos-baker.service tezos-endorser.service tezos-accuser.service` from your tezos-node.service and do not install the baker/accuser/endorser services. 
+The above configurations work for both front end nodes and for baking/endorsing/accusing nodes. If you want to use this (I recommend you do) for your front-end nodes too, simply remove the line `RequiredBy	= tezos-baker.service tezos-endorser.service tezos-accuser.service` from your tezos-node.service and do not install the baker/accuser/endorser services. 
 
 ### Restarting your Tezos operations automatically
 
