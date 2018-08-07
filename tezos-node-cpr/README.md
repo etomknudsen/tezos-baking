@@ -16,6 +16,7 @@ You can configure the following parameters (simply edit the script) to your liki
 - [ ] TIME_TO_RETRY_P2P
 - [ ] TIME_TO_WAIT_FOR_P2P
 - [ ] TIME_TO_WAIT_FOR_BLOCK
+- [ ] TIME_TO_WAIT_FOR_BLOCK_MAX
 
 You may also configure these parameters:
 - [x] RPC_HOST=127.0.0.1
@@ -52,6 +53,7 @@ TIME_TO_WAIT_FOR_RPC_SERVER=30
 TIME_TO_RETRY_P2P=10
 TIME_TO_WAIT_FOR_P2P=90
 TIME_TO_WAIT_FOR_BLOCK=180
+TIME_TO_WAIT_FOR_BLOCK_MAX=600
 
 # Give the tezos deamon a chance to start up properly
 if [ $(date +"%s") -lt $(($LAST_REBOOT+$TIME_TO_WAIT_AFTER_REBOOT)) ]; then
@@ -91,13 +93,13 @@ if [ $(rpcserverrunning) ]; then
 					sleep $TIME_TO_RETRY_P2P
 				done
 			fi
-			if [ $(networkconnected) ] && [ $(rpcserverrunning) ] && [ $P2P_TX_TOTAL -lt $(getTotalTxp2p) ]; then
+			if [ $(networkconnected) ] && [ $(rpcserverrunning) ] && [ $P2P_TX_TOTAL -lt $(getTotalTxp2p) && [ $(getTimeSinceLastBlock) -le $TIME_TO_WAIT_FOR_BLOCK_MAX ] ]; then
 				echo $(log "Found p2p activity")
 			else
-				# Network OK. No p2p activity. Old block header. Restarting node. But check connection first
+				# Network OK. No p2p activity and/or (too) old block header. Restarting node. Check connection first.
 				if [ $(networkconnected) ] && [ $(pingconnected) ] && [ $(internetconnected) ] ; then				
-					echo $(log "Network OK. No p2p activity. Too long ($(getTimeSinceLastBlock) secs) since last block. Restarting node!")
-					systemctl reload-or-restart tezos-node.service
+					echo $(log "Network OK. No p2p activity and/or too long ($(getTimeSinceLastBlock) secs) since last block. Restarting node!")
+					systemctl reload-or-restart tezos-node
 					P2P_TX_TOTAL=0
 					sleep $TIME_TO_WAIT_AFTER_RESTART
 				else
