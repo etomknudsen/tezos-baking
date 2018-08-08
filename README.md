@@ -205,6 +205,12 @@ The above configurations work for both front end nodes and for baking/endorsing/
 
 Above, we use `Restart:on-failure`. You could use `Restart:always` - I just haven't found it neccessary and there is a slight risk that - if combinded with loose restart settings - could exhaust your system. But feel free to try it out if it'll make you sleep better at night. Now that you have all your Tezos operations 'servicified' you can indeed start sleeping at night again, without loosing out on your baking and endorsing slots.
 
+### Setting environment variables in e.g. the baker and endorser to closely monitor your ledger
+
+Just include the following in your [Service] section
+`Environment = TEZOS_LOG="client.signer.ledger -> debug"`
+
+
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
 I've now been asked repeatedly for a donation address. Just glad to help, and donations are not expected. If you feel you want to anyway you can use: tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL
