@@ -93,7 +93,7 @@ if [ $(rpcserverrunning) ]; then
 					sleep $TIME_TO_RETRY_P2P
 				done
 			fi
-			if [ $(networkconnected) ] && [ $(rpcserverrunning) ] && [ $P2P_TX_TOTAL -lt $(getTotalTxp2p) && [ $(getTimeSinceLastBlock) -le $TIME_TO_WAIT_FOR_BLOCK_MAX ] ]; then
+			if [ $(networkconnected) ] && [ $(rpcserverrunning) ] && [ $P2P_TX_TOTAL -lt $(getTotalTxp2p) ] && [ $(getTimeSinceLastBlock) -le $TIME_TO_WAIT_FOR_BLOCK_MAX ] ; then
 				echo $(log "Found p2p activity")
 			else
 				# Network OK. No p2p activity and/or (too) old block header. Restarting node. Check connection first.
