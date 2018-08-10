@@ -184,10 +184,10 @@ Same commands as for node to enable, reload/start, stop and get status on the ac
 
 ### Combining all the services to get a nice status page for your Tezos operations
 
-- ```sudo systemctl status tezos-node.service tezos-baker.service tezos-endorser.service tezos-accuser.service```<br>
+```sudo systemctl status tezos-node.service tezos-baker.service tezos-endorser.service tezos-accuser.service```<br>
 
 Or alternatively, shorter but less ordered: 
-- ```sudo systemctl status 'tezos-*.service'```<br>
+```sudo systemctl status 'tezos-*.service'```<br>
 
 You can restart all four services by restarting the node (because we bound the baker/endorser/accuser to the node):<br>
 ```sudo systemctl reload-or-restart tezos-node.service```
