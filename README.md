@@ -215,7 +215,7 @@ Just include the following in your [Service] section
 
 If you need to pass a lot of environment variables, use `EnvironmentFile` instead and place one variable per line here. `EnvironmentFile` should point to your file, e.g. /home/baker/tezosenvironmentvariables.
 
-### Using journalctl to monitor the node, bake, endorser and accuser
+### Using journalctl to monitor the node, baker, endorser and accuser
 
 Sometimes it is neccessary to go through log files to identify root causes for different events and sometimes it is just fun to follow the your Tezos services (=daemons) live. `systemd` has a very powerful tool to do this - it is called `journalctl` and a few examples on how to use it is given below. 
 
