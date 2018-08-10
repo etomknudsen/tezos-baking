@@ -213,7 +213,7 @@ Above, we use `Restart:on-failure`. You could use `Restart:always` - I just have
 Just include the following in your [Service] section
 `Environment = TEZOS_LOG="client.signer.ledger -> debug"`
 
-If you need to pass a lot of environment variables, use `EnvironmentFile` instead and place one variable per line here. `EnvironmentFile` should point to your file, e.g. /home/baker/tezosenvironmentvariables.sh.
+If you need to pass a lot of environment variables, use `EnvironmentFile` instead and place one variable per line here. `EnvironmentFile` should point to your file, e.g. /home/baker/tezosenvironmentvariables.
 
 ### Using journalctl to monitor the node, bake, endorser and accuser
 
