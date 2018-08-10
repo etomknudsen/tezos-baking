@@ -230,10 +230,10 @@ Similarly with the baker, endorser and accuser:<br>
 - ```journalctl --follow --unit=tezos-accuser.service```
 
 You can also get the output formatted to suit your needs. Try for example:<br>
-- ```journalctl --follow --unit=tezos-endorser.service --output=json-pretty```
+```journalctl --follow --unit=tezos-endorser.service --output=json-pretty```
 
 Tezos runs its time by the universal timezone 'UTC' to get journalctl to output your log in utc simply add --utc:<br>
-- ```journalctl --follow --unit=tezos-endorser.service --utc```
+```journalctl --follow --unit=tezos-endorser.service --utc```
 
 By now you've probably understood that the possibilities are almost endless and the flexibility is second to none. Try for example to get your log for the endorser after a given timestamp or between two timestamps by doing these:<br>
 - ```journalctl --unit=tezos-endorser.service --since=yesterday```
