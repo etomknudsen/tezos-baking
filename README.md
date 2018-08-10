@@ -3,13 +3,13 @@
 If you own Tezos tokens (XTZ), you want them to work for the Tezos network and ecosystem. 
 It is a fun challenge and you will be rewarded for doing it. The more individual bakers we have in the Tezos ecosystem the more decentralized and resilient Tezos will become.  
 
-Granted, it takes a little bit of work - but good guides exist and I think you will find it worth while. This repository focuses on getting you maximal uptime and ease of use once you have installed your node(s) and - if you use one - gotten your ledger to work. 
+Granted, it takes a little bit of work - but good guides exist and I think you will find it worth while. This repository focuses on getting you maximal uptime and ease of use once you have installed your node(s) and gotten your ledger to work. 
 
 To spin up a node use this excellent guide: https://github.com/tezoscommunity/FAQ/blob/master/Compile_Betanet.md
 
 To get your Ledger Nano S to work with Tezos follow this excellent guide: https://github.com/obsidiansystems/ledger-app-tezos/blob/master/README.md
 
-## Using systemd to control your node, baker, endorser and accuser
+## Using systemd to control and monitor your node, baker, endorser and accuser
 
 If you are not familiar with "services" or systemd there is a good intro here: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
 
@@ -26,6 +26,9 @@ Basically, for a full bakery we want to configure and (auto-)run four services
 For a node only, the bottom of this page has instructions on how to use `systemd` to run a non-baking node. It is super easy. If you only need that then you can read the `tezos-node.service` part and then skip to the bottom of the document. 
 
 The individual files for a full bakery are outlined below. You can copy and paste them into the paths/files mentioned in each section. 
+
+For monitoring the daemons you can use `journalctl` which is a powerful tool to monitor services both real-time and after the fact. 
+There is separate section on this towards the end of this document; go there now by clicking [this link] () 
   
 #### tezos-node.service
 
@@ -212,10 +215,44 @@ Just include the following in your [Service] section
 
 If you need to pass a lot of environment variables, use `EnvironmentFile` instead and place one variable per line here. `EnvironmentFile` should point to your file, e.g. /home/baker/tezosenvironmentvariables.sh.
 
+### Using journalctl to monitor the node, bake, endorser and accuser
+
+Sometimes it is neccessary to go through log files to identify root causes for different events and sometimes it is just fun to follow the your Tezos services (=daemons) live. `systemd` has a very powerful tool to do this - it is called `journalctl` and a few examples on how to use it is given below. 
+
+To simply follow your node's output real-time: <br> 
+```journalctl --follow --unit=tezos-node.service```
+
+*You dont really need to add the .service - but I'll keep doing it here for clarity*
+
+Similarly with the baker, endorser and accuser:<br>
+- ```journalctl --follow --unit=tezos-baker.service```
+- ```journalctl --follow --unit=tezos-endorser.service```
+- ```journalctl --follow --unit=tezos-accuser.service```
+
+You can also get the output formatted to suit your needs. Try for example:<br>
+- ```journalctl --follow --unit=tezos-endorser.service --output=json-pretty```
+
+Tezos runs its time by the universal timezone 'UTC' to get journalctl to output your log in utc simply add --utc:<br>
+- ```journalctl --follow --unit=tezos-endorser.service --utc```
+
+By now you've probably understood that the possibilities are almost endless and the flexibility is second to none. Try for example to get your log for the endorser after a given timestamp or between two timestamps by doing these:<br>
+- ```journalctl --unit=tezos-endorser.service --since=yesterday```
+- ```journalctl --unit=tezos-endorser.service --since=today```
+- ```journalctl --unit=tezos-endorser.service --since='2018-08-01 00:00:00' --until='2018-08-10 12:00:00' ```
+
+Or find your bakes since last boot:<br>
+```journalctl --unit=tezos-baker.service --boot=-0 | grep candidate```
+
+If you have installed/compiled journalctl with pattern matching functionality you can do:<br>
+```journalctl --unit=tezos-baker.service --boot=-0 --grep=candidate```
+
+And on and on....
+
+*See more using `man journalctl`*
 
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
-I've now been asked repeatedly for a donation address. Just glad to help, and donations are not expected. If you feel you want to anyway you can use: tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL
+I've now been asked repeatedly for a donation address. Just glad to help, and donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzscan.io/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
 
 Enjoy!
 
