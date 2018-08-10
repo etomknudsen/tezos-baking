@@ -27,7 +27,7 @@ But I do recommend that you leave them be unless you are running an advanced set
 You would want to test the script first after having reviewed it and then install it as a service.
 
 #### The script itself looks like this
-```
+```bash
 #!/bin/sh
 #set -eux
 
