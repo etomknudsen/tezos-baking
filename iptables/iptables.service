@@ -1,0 +1,12 @@
+[Unit]
+Description=Packet Filtering Framework
+Before=network-pre.target
+Wants=network-pre.target
+[Service]
+Type=oneshot
+ExecStart=/sbin/iptables-restore /etc/iptables/iptables.rules
+ExecReload=/sbin/iptables-restore /etc/iptables/iptables.rules
+ExecStop=/sbin/iptables -F
+RemainAfterExit=yes
+[Install]
+WantedBy=network-online.target
