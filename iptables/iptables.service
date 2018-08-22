@@ -1,12 +1,17 @@
+# iptables service (part of systemd)
+# file: /etc/systemd/system/iptables.service 
+
 [Unit]
-Description=Packet Filtering Framework
-Before=network-pre.target
-Wants=network-pre.target
+Description = Packet Filtering Framework
+Before      = network-pre.target
+Wants       = network-pre.target
+
 [Service]
-Type=oneshot
-ExecStart=/sbin/iptables-restore /etc/iptables/iptables.rules
-ExecReload=/sbin/iptables-restore /etc/iptables/iptables.rules
-ExecStop=/sbin/iptables -F
-RemainAfterExit=yes
+Type        = oneshot
+ExecStart   = /sbin/iptables-restore /etc/iptables/iptables.rules
+ExecReload  = /sbin/iptables-restore /etc/iptables/iptables.rules
+ExecStop    = /sbin/iptables -F
+RemainAfterExit = yes
+
 [Install]
 WantedBy=network-online.target
