@@ -1,9 +1,9 @@
 
 ### Start iptables 
-systemctl start iptables 
+`sudo systemctl start iptables` 
 
 ### Verify that iptables is running
-systemctl status iptables 
+`sudo systemctl status iptables`
 
 ### Enable iptables service
-systemctl enable iptables.service
+`sudo systemctl enable iptables.service`
