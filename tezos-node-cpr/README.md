@@ -98,7 +98,8 @@ if [ $(rpcserverrunning) ]; then
 			else
 				# Network OK. No p2p activity and/or (too) old block header. Restarting node. Check connection first.
 				if [ $(networkconnected) ] && [ $(pingconnected) ] && [ $(internetconnected) ] ; then				
-					echo $(log "Network OK. No p2p activity and/or too long ($(getTimeSinceLastBlock) secs) since last block. Restarting node!")
+					echo $(log "Network OK. No p2p activity and/or too long ($(getTimeSinceLastBlock) secs since last block. Restarting node!")
+					#You may want to restart your VPN services as well?
 					systemctl reload-or-restart tezos-node
 					P2P_TX_TOTAL=0
 					sleep $TIME_TO_WAIT_AFTER_RESTART
