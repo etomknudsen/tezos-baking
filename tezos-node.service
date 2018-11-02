@@ -9,7 +9,7 @@ Documentation	  = http://tezos.gitlab.io/betanet/
 User            = ubuntu
 Group		= ubuntu
 WorkingDirectory= /home/ubuntu/
-ExecStart	= /home/ubuntu/tezos/tezos-node run --rpc-addr 127.0.0.1:8732  --connections 10 `bash /home/ubuntu/TzBake/get_peers.sh`
+ExecStart	= /home/ubuntu/tezos/tezos-node run --rpc-addr 127.0.0.1:8732  --connections 50 `bash /home/ubuntu/TzBake/get_peers.sh`
 Restart         = always
 
 [Install]
