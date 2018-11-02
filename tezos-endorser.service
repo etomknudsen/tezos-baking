@@ -3,16 +3,15 @@
 
 [Unit]
 Description     = Tezos Endorser Service
-Wants           = network-online.target openvpn-client@<vpnprovider>.service 
 BindsTo		= tezos-node.service
 After           = tezos-node.service
 
 [Service]
-User            = baker
-Group		= baker
-WorkingDirectory= /home/baker/
+User            = ubuntu
+Group		= ubuntu
+WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-endorser-002-PsYLVpVv run ledger_bakerone_ed_0_0
+ExecStart       = /home/ubuntu/tezos/tezos-endorser-002-PsYLVpVv run $BAKER_NAME
 Restart         = on-failure
 
 [Install]
