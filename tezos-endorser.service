@@ -12,7 +12,7 @@ Group		= ubuntu
 WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
 ExecStart       = /home/ubuntu/tezos/tezos-endorser-002-PsYLVpVv run $BAKER_NAME
-Restart         = on-failure
+Restart         = always
 
 [Install]
 WantedBy	= multi-user.target
