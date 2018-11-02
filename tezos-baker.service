@@ -12,7 +12,7 @@ Group		= ubuntu
 WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
 ExecStart       = /home/ubuntu/tezos/tezos-baker-002-PsYLVpVv  run with local node "/home/tezos/.tezos-node" $BAKER_NAME
-Restart         = on-failure
+Restart         = always
 
 [Install]
 WantedBy	= multi-user.target
