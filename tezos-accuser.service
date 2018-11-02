@@ -3,16 +3,15 @@
 
 [Unit]
 Description     = Tezos Accuser Service
-Wants           = network-online.target openvpn-client@<vpnprovider>.service 
 BindsTo		= tezos-node.service
 After           = tezos-node.service
 
 [Service]
-User            = baker
-Group		= baker
-WorkingDirectory= /home/baker/
+User            = ubuntu
+Group		= ubuntu
+WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-accuser-002-PsYLVpVv run
+ExecStart       = /home/ubuntu/tezos/tezos-accuser-002-PsYLVpVv run
 Restart         = on-failure
 
 [Install]
