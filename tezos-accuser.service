@@ -3,7 +3,7 @@
 
 [Unit]
 Description     = Tezos Accuser Service
-BindsTo		= tezos-node.service
+PartOf		= tezos-node.service
 After           = tezos-node.service
 
 [Service]
