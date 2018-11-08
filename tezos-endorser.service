@@ -11,7 +11,7 @@ User            = ubuntu
 Group		= ubuntu
 WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/ubuntu/tezos/tezos-endorser-002-PsYLVpVv run $BAKER_NAME
+ExecStart       = /home/ubuntu/TzBake/manual_endorser_start_wrapper.sh
 Restart         = always
 
 [Install]
