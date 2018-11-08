@@ -13,7 +13,8 @@ WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
 ExecStart       = /home/ubuntu/tezos/tezos-accuser-002-PsYLVpVv run
 Restart         = always
-RestartSec      = 5min
+RestartSec      = 1min
+StartLimitBurst = 60
 
 [Install]
 WantedBy	= multi-user.target tezos-node.service
