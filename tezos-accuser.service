@@ -15,4 +15,4 @@ ExecStart       = /home/ubuntu/tezos/tezos-accuser-002-PsYLVpVv run
 Restart         = always
 
 [Install]
-WantedBy	= multi-user.target
+WantedBy	= multi-user.target tezos-node.service
