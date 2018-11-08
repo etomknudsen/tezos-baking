@@ -13,6 +13,8 @@ WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
 ExecStart       =  /home/ubuntu/TzBake/manual_baker_start.sh $BAKER_NAME $BAKER_PASSWORD
 Restart         = always
+RestartSec      = 1min
+StartLimitBurst = 60
 
 [Install]
 WantedBy	= multi-user.target tezos-node.service
