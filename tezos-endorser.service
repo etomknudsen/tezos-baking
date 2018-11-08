@@ -13,6 +13,8 @@ WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
 ExecStart       = /home/ubuntu/TzBake/manual_endorser_start_wrapper.sh
 Restart         = always
+RestartSec      = 1min
+StartLimitBurst = 60
 
 [Install]
 WantedBy	= multi-user.target tezos-node.service
