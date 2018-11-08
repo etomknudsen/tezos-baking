@@ -3,7 +3,7 @@
 
 [Unit]
 Description     = Tezos Endorser Service
-BindsTo		= tezos-node.service
+PartOf		= tezos-node.service
 After           = tezos-node.service
 
 [Service]
@@ -15,4 +15,4 @@ ExecStart       = /home/ubuntu/tezos/tezos-endorser-002-PsYLVpVv run $BAKER_NAME
 Restart         = always
 
 [Install]
-WantedBy	= multi-user.target
+WantedBy	= multi-user.target tezos-node.service
