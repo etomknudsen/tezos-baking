@@ -98,7 +98,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-baker-002-PsYLVpVv run with local node /home/baker/.tezos-node ledger_bakerone_ed_0_0
+ExecStart       = /home/baker/tezos/tezos-baker-003-PsddFKi3 run with local node /home/baker/.tezos-node ledger_bakerone_ed_0_0
 Restart         = on-failure
 
 [Install]
@@ -138,7 +138,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-endorser-002-PsYLVpVv run ledger_bakerone_ed_0_0
+ExecStart       = /home/baker/tezos/tezos-endorser-003-PsddFKi3 run ledger_bakerone_ed_0_0
 Restart         = on-failure
 
 [Install]
@@ -169,7 +169,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-accuser-002-PsYLVpVv run
+ExecStart       = /home/baker/tezos/tezos-accuser-003-PsddFKi3 run
 Restart         = on-failure
 
 [Install]
@@ -252,7 +252,7 @@ And on and on....
 
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
-I've now been asked repeatedly for a donation address. Just glad to help, and donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzscan.io/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
+I've now been asked repeatedly for a donation address. Donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzscan.io/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
 
 Enjoy!
 
