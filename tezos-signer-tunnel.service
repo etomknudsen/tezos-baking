@@ -1,0 +1,18 @@
+# The Tezos Signer SSH Tunneling service (part of systemd)
+# file: /etc/systemd/system/tezos-signer-tunnel.service 
+# You need to create a non-priviledged user without a password if you want max security. Run tunnel over ssh.
+
+[Unit]
+Description     = Tezos Signer SSH Tunneling Service
+After           = network-online.target tezos-signer.service
+Wants           = network-online.target
+
+[Service]
+User            = baker
+Group           = baker
+WorkingDirectory= /home/baker/
+ExecStart       = /usr/bin/autossh -M 0 -q -N -o "ServerAliveInterval 60" -o "ServerAliveCountMax 3" -R 0.0.0.0:9999:localhost:9999 autossh@<hostbeingforwardedto>
+Restart         = on-failure
+
+[Install]
+WantedBy=multi-user.target
