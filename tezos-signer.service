@@ -1,0 +1,17 @@
+# The Tezos Signer service (part of systemd)
+# file: /etc/systemd/system/tezos-signer.service 
+
+[Unit]
+Description     = Tezos Signer Service
+After           = network-online.target
+Wants           = network-online.target
+
+[Service]
+User            = baker
+Group           = baker
+WorkingDirectory= /home/baker/
+ExecStart       = /home/baker/tezos/tezos-signer launch socket signer -a 127.0.0.1 -p 9999
+Restart         = on-failure
+
+[Install]
+WantedBy=multi-user.target
