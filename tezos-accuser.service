@@ -1,5 +1,5 @@
 # The Tezos Accuser service (part of systemd)
-# file: /etc/systemd/system/tezos-accuser.service 
+# file: /etc/systemd/system/tezos-accuser.service
 
 [Unit]
 Description     = Tezos Accuser Service
@@ -11,7 +11,7 @@ User            = ubuntu
 Group		= ubuntu
 WorkingDirectory= /home/ubuntu/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/ubuntu/tezos/tezos-accuser-003-PsddFKi3 run
+ExecStart       = /home/ubuntu/tezos/tezos-accuser-005-PsBabyM1 run
 Restart         = always
 RestartSec      = 1min
 StartLimitBurst = 60
