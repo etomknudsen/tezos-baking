@@ -27,4 +27,5 @@ for i in range(cycle_from, cycle_to):
 		delegate_pkh = delegate[0]
 		void_fee = int(delegate_pkh == baker_pkh)
 		delegate_balance = delegate[1]  
-		delegate_rewards = total_rewards * delegate_balance/total_delegated * (100 - fee_percent * void_fee)/100  
+		delegate_rewards = total_rewards * delegate_balance/total_delegated * (100 - fee_percent * void_fee)/100
+		print '{};{};{};{};'.format(i, delegate_pkh, total_rewards, delegate_rewards)
