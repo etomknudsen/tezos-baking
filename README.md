@@ -252,7 +252,7 @@ And on and on....
 
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
-I've now been asked repeatedly for a donation address. Donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzscan.io/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
+I've now been asked repeatedly for a donation address. Donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzstats.com/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
 
 Enjoy!
 
