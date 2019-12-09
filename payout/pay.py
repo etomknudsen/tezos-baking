@@ -21,7 +21,7 @@ for i in range(cycle_from, cycle_to):
         baker_delegated = float(data[0][3])
         total_rewards = total_income - total_lost
         # Get delegates for cycle
-        print('Cycle;Address;RewardShare;Reward;Fee;PayOut')
+        print('Cycle;Address;RewardShare;Reward;PayOut;Fee')
         url_api = '{}/tables/snapshot?delegate={}&cycle={}&is_selected=1&columns=address,balance,cycle'.format(api_server, baker_pkh, i-7)
         response = urllib.urlopen(url_api)
         data = json.loads(response.read().decode("utf-8"))
