@@ -33,4 +33,4 @@ for i in range(cycle_from, cycle_to):
                 delegate_rewards = total_rewards * delegate_rewardshare
                 delegate_fee = delegate_rewards * (100 - fee_percent * void_fee)/100
                 delegate_payout = delegate_rewards - delegate_fee
-                print '{};{};{};{}%;{};{}'.format(i, delegate_pkh, delegate_rewardshare * 100, delegate_rewards, delegate_fee, delegate_payout)
+                print '{};{};{}%;{};{};{}'.format(i, delegate_pkh, delegate_rewardshare * 100, delegate_rewards, delegate_fee, delegate_payout)
