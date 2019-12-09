@@ -9,6 +9,9 @@ api_server      = "https://api.tzstats.com"
 baker_pkh       = "<insertbakerpkh>"        # set address
 fee_percent     = 20.0                                          # delegation service fee
 
+# Print header for CSV file
+print('Cycle;Address;RewardShare;Reward;PayOut;Fee')
+
 # Go through cycles one by one
 for i in range(cycle_from, cycle_to):
         # Get total baker rewards for cycle
@@ -21,7 +24,6 @@ for i in range(cycle_from, cycle_to):
         baker_delegated = float(data[0][3])
         total_rewards = total_income - total_lost
         # Get delegates for cycle
-        print('Cycle;Address;RewardShare;Reward;PayOut;Fee')
         url_api = '{}/tables/snapshot?delegate={}&cycle={}&is_selected=1&columns=address,balance,cycle'.format(api_server, baker_pkh, i-7)
         response = urllib.urlopen(url_api)
         data = json.loads(response.read().decode("utf-8"))
