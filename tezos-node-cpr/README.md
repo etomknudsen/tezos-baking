@@ -144,4 +144,7 @@ Restart         = on-failure
 WantedBy	= multi-user.target
 ```
 
-
+Since journalctl adds its own timestamp to reported events, one might want to remove the timestamp from the `log()` function in this script:
+```
+log(){ echo "$1"; }
+```
