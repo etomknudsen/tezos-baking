@@ -5,7 +5,7 @@ It is a fun challenge and you will be rewarded for doing it. The more individual
 
 Granted, it takes a little bit of work - but good guides exist and I think you will find it worth while. This repository focuses on getting you maximal uptime and ease of use once you have installed your node(s) and gotten your ledger to work. 
 
-To spin up a node use this excellent guide: [https://github.com/tezoscommunity/FAQ/blob/master/Compile_Mainnet.md](https://github.com/tezoscommunity/FAQ/blob/master/Compile_Mainnet.md)
+To spin up a node use this excellent guide: http://doc.tzalpha.net/introduction/howtoget.html#build-from-sources
 
 To get your Ledger Nano S to work with Tezos follow this excellent guide: https://github.com/obsidiansystems/ledger-app-tezos/blob/master/README.md
 
