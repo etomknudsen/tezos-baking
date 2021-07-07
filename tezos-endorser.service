@@ -12,7 +12,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-endorser-004-Pt24m4xi run ledger_bakerone_ed_0_0
+ExecStart       = /home/baker/tezos/tezos-endorser-005-PsBabyM1 run ledger_bakerone_ed_0_0
 Restart         = on-failure
 
 [Install]

@@ -98,7 +98,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-baker-004-Pt24m4xi run with local node /home/baker/.tezos-node ledger_bakerone_ed_0_0
+ExecStart       = /home/baker/tezos/tezos-baker-005-PsBabyM1 run with local node /home/baker/.tezos-node ledger_bakerone_ed_0_0
 Restart         = on-failure
 
 [Install]
@@ -138,7 +138,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-endorser-004-Pt24m4xi run ledger_bakerone_ed_0_0
+ExecStart       = /home/baker/tezos/tezos-endorser-005-PsBabyM1 run ledger_bakerone_ed_0_0
 Restart         = on-failure
 
 [Install]
@@ -169,7 +169,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-accuser-004-Pt24m4xi run
+ExecStart       = /home/baker/tezos/tezos-accuser-005-PsBabyM1 run
 Restart         = on-failure
 
 [Install]
