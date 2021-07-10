@@ -250,6 +250,12 @@ And on and on....
 
 *See more using `man journalctl`*
 
+By default both tezos-node and journalctl add a timestamp to each event, resulting in double timestamps when displayed.
+To simplify the journalctl output one can configure tezos-node to display events without timestamps by adding the following to the top level of ~/.tezos-node/config.json:
+```
+"log": { "template": "$(section): $(message)" },
+```
+
 #### Forget about cron jobs etc - systemd has you covered for some happy hands-off baking...
 
 I've now been asked repeatedly for a donation address. Donations are not expected. If you feel you want to anyway you can use: [tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL](https://tzstats.com/tz1a2oGa6yTXGuS9d9DTckQm5vrh12qYqCqL)
