@@ -1,5 +1,5 @@
 ## Tezos Node CPR - 2021 rewrite 
-* Complete rewrite in bash (no python)
+### Complete rewrite in bash (no python)
 * [x] Ability to force VPN
 * [x] Caching of block headers for 100% concurrency during script execution
 * [x] Using protocol constants for calculating acceptable delays
