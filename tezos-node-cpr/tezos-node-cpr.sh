@@ -76,7 +76,7 @@ getCurrentOutflowP2P(){ echo $(clean $(getNetworkStatInfo current_outflow)) && r
 isSendingP2P(){ [[ $(getCurrentOutflowP2P) > 0 ]] && return 0 || return 1; }
 isChattingP2P(){ isRecievingP2P && isSendingP2P  && return 0 || return 1; }
 isP2PThresholdMet(){ [ $(calc $(getCurrentInflowP2P)+$(getCurrentOutflowP2P)) -gt $P2P_THRESHOLD ] && return 0 || return 1; }
-getCurrentP2PRate(){ echo $(calc "scale=2;($(getCurrentOutflowP2P)+$(getCurrentOutflowP2P))/1024" ) && return 0 || return 1; }
+getCurrentP2PRate(){ echo $(calc "scale=2;($(getCurrentOutflowP2P)+$(getCurrentOutflowP2P))/1000" ) && return 0 || return 1; }
 getTotalTxp2p(){ rpcup && echo $(calc "$(clean $(getNetworkStatInfo total_recv))+$(clean $(getNetworkStatInfo total_sent))"); }
 
 # Define block related functions - note functions return -1 if unable to get RPC data
