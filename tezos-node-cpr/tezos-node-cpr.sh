@@ -23,7 +23,7 @@ RPC_HOST=127.0.0.1
 RPC_PORT=8732
 RPC_INT_URI="$RPC_HOST:$RPC_PORT"
 RPC_EXT_URI="https://rpc-mainnet.ateza.io"
-P2P_THRESHOLD=1024 # Amount of combined traffic to deem acceptable - B/s
+P2P_THRESHOLD=1000 # Amount of combined traffic to deem acceptable - B/s
 
 # Set timeouts (seconds) - only integers allowed 
 TIME_TO_WAIT_AFTER_REBOOT=15
@@ -114,9 +114,9 @@ getMinimalBlockDelay(){ tmp=$(clean $(getProtocolConstant "minimal_block_delay")
 log(){ echo "$1"; }
 logamber(){ local AMBER='\033[0;33m'; local NC='\033[0m'; echo -e "${AMBER}$1${NC}"; }
 logred(){ local RED='\033[1;31m'; local NC='\033[0m'; echo -e "${RED}$1${NC}"; } # Use \x1B instead of \033 if on Mac
-logNodeOK(){ log "Node OK | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) KB/s" && return 0 || return 1; }
+logNodeOK(){ log "Node OK | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
 logBlockNonZeroPrio(){ logamber "$(logNodeOK)"; }
-logNodeBehind(){ logred "BEHIND | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) KB/s" && return 0 || return 1; }
+logNodeBehind(){ logred "BEHIND | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
 logBlockDelayed(){ logred "$(logNodeOK)" && return 0 || return 1; }
 
 isLocalNodeLagging(){ [ $(getBlockLevelExternal) -gt $(getBlockLevel) ] && return 0 || return 1; }
