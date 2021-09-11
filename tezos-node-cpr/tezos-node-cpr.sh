@@ -119,16 +119,6 @@ logNodeOK(){ log "Node OK | Block \"$(shortenHash $(getBlockHash))\" | Level $(g
 logNodeOKnonZeroPrio(){ logamber "$(logNodeOK)"; }
 logNodeBehind(){ logred "BEHIND | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) KB/s" && return 0 || return 1; }
 logBlockDelayed(){ logred "$(logNodeOK)" && return 0 || return 1; }
-: '
-isInternalBlockHeaderCacheSet && log "Int Block Cache Set" || logred "Int Block Cache NOT Set"
-isExternalBlockHeaderCacheSet && log "Ext Block Cache Set" || logred "Ext Block Cache NOT Set"
-updateAllBlockheaderCaches
-isInternalBlockHeaderCacheSet && log "Int Block Cache Set" || logred "Int Block Cache NOT Set"
-isExternalBlockHeaderCacheSet && log "Ext Block Cache Set" || logred "Ext Block Cache NOT Set"
-echo $(getBlockDateTime)
-echo $(getBlockDateTimeExternal)
-exit
-'
 
 isLocalNodeLagging(){ [ $(getBlockLevelExternal) -gt $(getBlockLevel) ] && return 0 || return 1; }
 
