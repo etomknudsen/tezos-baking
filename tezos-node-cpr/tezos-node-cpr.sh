@@ -96,7 +96,7 @@ getTimeSinceLastBlockExternal(){ isExternalBlockHeaderCacheSet && echo $(calc "$
 getBlockHash(){ tmp=$(clean $(getBlockHeaderInfo hash)); [ "${#tmp}" -gt 0 ] && echo "$tmp" && return 0 || return 1; }
 getBlockHashExternal(){ echo $(clean $(getBlockHeaderInfoExternal hash "ext")) && return 0 || return 1; }
 getBlockLevel(){ tmp=$(clean $(getBlockHeaderInfo level)); [ "${#tmp}" -gt 0 ] && echo "$tmp" && return 0 || return 1; }
-getBlockPriority(){ tmp=$(clean $(getBlockHeaderInfo priority)); [ "${#tmp}" -gt 0 ] && echo "$tmp" && return 0 || return 1; }
+getBlockPriority(){ tmp=$(clean $(getBlockHeaderInfo payload_round)); [ "${#tmp}" -gt 0 ] && echo "$tmp" && return 0 || return 1; }
 getBlockLevelExternal(){ echo $(clean $(getBlockHeaderInfoExternal level "ext")) && return 0 || return 1; }
 getBlockProtocol(){ tmp=$(clean $(getBlockHeaderInfo protocol)); [ "${#tmp}" -gt 0 ] && echo "$tmp" && return 0 || return 1; }
 getBlockProtocolExternal(){ echo $(clean $(getBlockHeaderInfo protocol "ext")) && return 0 || return 1; }
