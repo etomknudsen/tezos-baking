@@ -114,9 +114,9 @@ getMinimalBlockDelay(){ tmp=$(clean $(getProtocolConstant "minimal_block_delay")
 log(){ echo "$1"; }
 logamber(){ local AMBER='\033[0;33m'; local NC='\033[0m'; echo -e "${AMBER}$1${NC}"; }
 logred(){ local RED='\033[1;31m'; local NC='\033[0m'; echo -e "${RED}$1${NC}"; } # Use \x1B instead of \033 if on Mac
-logNodeOK(){ log "Node OK | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
+logNodeOK(){ log "Node OK | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Round $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
 logBlockNonZeroPrio(){ logamber "$(logNodeOK)"; }
-logNodeBehind(){ logred "BEHIND | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Priority $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
+logNodeBehind(){ logred "BEHIND | Block \"$(shortenHash $(getBlockHash))\" | Level $(getBlockLevel) | Round $(getBlockPriority) | $(getTimeSinceLastBlock) secs ago | Traffic: $(getCurrentP2PRate) kB/s" && return 0 || return 1; }
 logBlockDelayed(){ logred "$(logNodeOK)" && return 0 || return 1; }
 
 isLocalNodeLagging(){ [ $(getBlockLevelExternal) -gt $(getBlockLevel) ] && return 0 || return 1; }
