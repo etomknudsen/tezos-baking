@@ -58,7 +58,7 @@ shortenHash(){ echo "${1::5}"..."${1: -5}"; }
 
 # Define network functions
 networkon(){ [ $(cat /sys/class/net/$NETWORK_INTERFACE/operstate) == "up" ] && return 0 || return 1; }
-pingconnected(){ networkon && ping -q -c 1 -W 2 8.8.8.8 >/dev/null && return 0 || return 1; }
+pingconnected(){ ping -q -c 1 -W 2 8.8.8.8 >/dev/null && return 0 || return 1; }
 vpnon(){ [ $(nmcli c show --active | grep $VPN_INTERFACE | wc -l) -eq 1 ] && return 0 || return 1; }
 vpn(){ vpnon && pingconnected && return 0 || return 1; }
 internetconnected(){ curl -m 1 -sf http://google.com > /dev/null && return 0 || return 1; }
