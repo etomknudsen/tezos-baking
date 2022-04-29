@@ -12,7 +12,7 @@ User            = baker
 Group		= baker
 WorkingDirectory= /home/baker/
 ExecStartPre	= /bin/sleep 1
-ExecStart       = /home/baker/tezos/tezos-accuser-004-Pt24m4xi run
+ExecStart       = /home/baker/tezos/tezos-accuser-<protocol-relevant-info-here> run
 Restart         = on-failure
 
 [Install]
