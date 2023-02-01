@@ -131,7 +131,7 @@ You would want to make sure the script is running. You can start it manually `./
 # file: /etc/systemd/system/tezos-node-cpr.service 
 
 [Unit]
-Description     = Tezos Node Moitoring and Restarting Service
+Description     = Tezos Node Monitoring and Restarting Service
 Wants           = network-online.target tezos-node.service
 After           = tezos-node.service
 
@@ -144,4 +144,7 @@ Restart         = on-failure
 WantedBy	= multi-user.target
 ```
 
-
+Since journalctl adds its own timestamp to reported events, one might want to remove the timestamp from the `log()` function in this script:
+```
+log(){ echo "$1"; }
+```
