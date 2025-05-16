@@ -1,50 +1,41 @@
 #!/bin/sh
 #set -eux
 
-echo "Starting the tezos-node-cpr.sh v0.4 (etomknudsen, May 2025 - full monitoring + email alerts)"
+echo "Starting the tezos-node-cpr.sh v 0.5 (etomknudsen, updated May 2025)"
 
-# --- Configuration ---
+# Get timestamp for last reboot
+LAST_REBOOT=$(date -d "$(who -b | cut -c22-38)" +"%s")
 
-# RPC settings
+# Networking interface
+NETWORK_INTERFACE="enx3c18a056d703"
+
+# Set RPC parameters
 RPC_HOST=127.0.0.1
 RPC_PORT=8732
 
-# Baker's Public Key Hash (change this)
-BAKER_PKH="tz1YourBakerAddressHere"
-
-# Networking interface
-NETWORK_INTERFACE="enp1s0"
-
-# Email alerts
-ENABLE_EMAIL_ALERTS=true
-ALERT_ON_MISSED_BAKES=true
-ALERT_ON_MISSED_ATTESTATIONS=true
-ALERT_EMAIL="you@example.com"
-EMAIL_SUBJECT_PREFIX="[Tezos CPR Alert]"
-
-# Restart thresholds
+# Attestation monitoring config
+BAKER_PKH="tz1eLbDXYceRsPZoPmaJXZgQ6pzgnTQvZtpo"
 MAX_MISSED_ATTESTATIONS=5
-MAX_MISSED_BAKES=3
+BLOCK_OFFSET=3
 
-# Timeout settings
+# Block time configuration
+BLOCK_TIME=10  # in seconds
+
+# Set timeouts (seconds)
 TIME_TO_WAIT_AFTER_REBOOT=5
 TIME_TO_WAIT_FOR_NETWORK=10
 TIME_TO_WAIT_AFTER_RESTART=60
 TIME_TO_WAIT_FOR_RPC_SERVER=30
-TIME_TO_RETRY_P2P=10
-TIME_TO_WAIT_FOR_P2P=90
-TIME_TO_WAIT_FOR_BLOCK=180
-TIME_TO_WAIT_FOR_BLOCK_MAX=600
+TIME_TO_RETRY_P2P=4
+TIME_TO_WAIT_FOR_P2P=15
+TIME_TO_WAIT_FOR_BLOCK=30
+TIME_TO_WAIT_FOR_BLOCK_MAX=60
+TIME_TO_WAIT_FOR_ATTESTATION=30
 
-# --- Initialization ---
-LAST_REBOOT=$(date -d "$(who -b | cut -c22-38)" +"%s")
-[ "$(date +%s)" -lt $((LAST_REBOOT + TIME_TO_WAIT_AFTER_REBOOT)) ] && sleep "$TIME_TO_WAIT_AFTER_REBOOT"
+# State tracking
+MISSED_ATTESTATIONS=0
 
-# --- Helper Functions ---
-
-log() {
-    echo "$(date -u +"%Y-%m-%dT%TZ") $1"
-}
+# --- Function Definitions ---
 
 safe_jq() {
     local json="$1"
@@ -52,55 +43,33 @@ safe_jq() {
     echo "$json" | jq -r "$query" 2>/dev/null || echo ""
 }
 
-sendEmailAlert() {
-    local subject="$1"
-    local message="$2"
-    if [ "$ENABLE_EMAIL_ALERTS" = "true" ]; then
-        echo "$message" | mail -s "$EMAIL_SUBJECT_PREFIX $subject" "$ALERT_EMAIL"
-    fi
-}
-
-# --- RPC Checks ---
-
 getLastBlockHeaderInfo() {
     local key="$1"
     local response=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/header")
-    [ -n "$response" ] && safe_jq "$response" ".${key} // empty" || echo ""
+    if [ -n "$response" ]; then
+        safe_jq "$response" ".${key} // empty"
+    else
+        echo ""
+    fi
 }
 
 getTimeSinceLastBlock() {
-    local ts=$(getLastBlockHeaderInfo timestamp)
-    [ -n "$ts" ] && echo $(( $(date +%s) - $(date -d "$ts" +%s) )) || echo 999999
+    last_ts=$(getLastBlockHeaderInfo timestamp)
+    if [ -n "$last_ts" ]; then
+        echo $(( $(date +%s) - $(date -d "$last_ts" +%s) ))
+    else
+        echo 999999
+    fi
 }
 
 getTotalTxp2p() {
     local response=$(curl -s "$RPC_HOST:$RPC_PORT/network/stat")
-    [ -n "$response" ] && safe_jq "$response" '(.total_recv // 0) + (.total_sent // 0)' || echo 0
+    if [ -n "$response" ]; then
+        safe_jq "$response" '(.total_recv // 0) + (.total_sent // 0)'
+    else
+        echo 0
+    fi
 }
-
-getAttestationCountFromLastBlock() {
-    local response=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/operations")
-    [ -n "$response" ] && echo "$response" | jq -r '.[0] | length' || echo 0
-}
-
-didMyBakerAttestLastBlock() {
-    local response=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/operations")
-    echo "$response" | jq -r --arg BAKER "$BAKER_PKH" \
-    '.[0][] | select(.contents[].kind == "attestation") | .contents[] | select(.attester == $BAKER) | .attester' | grep -q "$BAKER_PKH" && echo "yes" || echo "no"
-}
-
-getBlockProducer() {
-    local response=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/metadata")
-    [ -n "$response" ] && safe_jq "$response" '.baker' || echo ""
-}
-
-getMyBakingRightsForLevel() {
-    local level="$1"
-    local response=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/helpers/baking_rights?level=$level&delegates=$BAKER_PKH&max_priority=5")
-    [ -n "$response" ] && echo "$response" | jq -r '.[] | select(.delegate == "'"$BAKER_PKH"'") | .priority' | xargs || echo ""
-}
-
-# --- Network Checks ---
 
 networkconnected() {
     [ "$(cat /sys/class/net/$NETWORK_INTERFACE/operstate 2>/dev/null)" = "up" ] && echo true
@@ -118,12 +87,54 @@ rpcserverrunning() {
     curl -sf "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/header" >/dev/null && echo true
 }
 
-# --- Monitoring State ---
+log() {
+    echo "$(date -u +"%Y-%m-%dT%TZ") $1"
+}
 
-MISSED_ATTESTATION_COUNT=0
-MISSED_BAKING_COUNT=0
+get_current_block_height() {
+    curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/header" | jq -r '.level'
+}
 
-# --- Main Loop ---
+get_attestation_rights_count() {
+    local level="$1"
+    curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/head/helpers/attestation_rights?delegate=$BAKER_PKH&level=$level" |
+        jq --arg BAKER "$BAKER_PKH" '[.[] | .delegates[] | select(.delegate == $BAKER) | .attestation_power] | add // 0'
+}
+
+get_attested_count() {
+    local level="$1"
+    RAW_OUTPUT=$(curl -s "$RPC_HOST:$RPC_PORT/chains/main/blocks/$level/operations")
+    echo "$RAW_OUTPUT" | jq --arg BAKER "$BAKER_PKH" '
+        flatten |
+        map(select(.contents[]? | select(.kind == "attestation" and .metadata.delegate == $BAKER))) |
+        length
+    '
+}
+
+check_attestation_status() {
+    local current_level=$(get_current_block_height)
+    local target_level=$((current_level - BLOCK_OFFSET))
+    local rights=$(get_attestation_rights_count "$target_level")
+    local actual=$(get_attested_count "$target_level")
+
+    if ! [ "$rights" -eq "$rights" ] 2>/dev/null || ! [ "$actual" -eq "$actual" ] 2>/dev/null; then
+        log "Could not parse attestation data for level $target_level"
+        return 1
+    fi
+
+    if [ "$rights" -gt 0 ] && [ "$actual" -eq 0 ]; then
+        log "No attestations injected at level $target_level"
+        return 1
+    else
+        log "Attestation check at level $target_level: slots = $rights, injected = $actual"
+        return 0
+    fi
+}
+
+# --- Main Control Flow ---
+LAST_BLOCK_HASH=""
+MAX_MISSING_ATTESTATIONS=5   # Define the number of missing attestations before restarting the node
+MISSING_ATTESTATIONS_COUNT=0 # Counter for missing attestations
 
 if [ "$(rpcserverrunning)" != "true" ]; then
     sleep "$TIME_TO_WAIT_FOR_RPC_SERVER"
@@ -131,68 +142,75 @@ fi
 
 if [ "$(rpcserverrunning)" = "true" ]; then
     while true; do
-        P2P_TX_TOTAL=$(getTotalTxp2p)
+        CURRENT_BLOCK_HASH=$(getLastBlockHeaderInfo hash)
+        CURRENT_BLOCK_LEVEL=$(getLastBlockHeaderInfo level)
+        TIME_SINCE_LAST_BLOCK=$(getTimeSinceLastBlock)
 
-        if [ "$(networkconnected)" = "true" ] && \
-           [ "$(rpcserverrunning)" = "true" ] && \
-           [ "$(getTimeSinceLastBlock)" -le "$TIME_TO_WAIT_FOR_BLOCK" ]; then
+        if [ "$CURRENT_BLOCK_HASH" != "$LAST_BLOCK_HASH" ]; then
+            log "Processing new block: Level: $CURRENT_BLOCK_LEVEL, $TIME_SINCE_LAST_BLOCK secs old"
 
-            BLOCK_HASH=$(getLastBlockHeaderInfo hash)
-            BLOCK_TIME=$(getLastBlockHeaderInfo timestamp)
-            TIME_SINCE_BLOCK=$(getTimeSinceLastBlock)
-            ATTESTATION_COUNT=$(getAttestationCountFromLastBlock)
-            MY_BAKER_ATTESTED=$(didMyBakerAttestLastBlock)
-            BLOCK_PRODUCER=$(getBlockProducer)
-            CURRENT_LEVEL=$(getLastBlockHeaderInfo level)
-            MY_BAKING_RIGHTS=$(getMyBakingRightsForLevel "$CURRENT_LEVEL")
+            P2P_TX_TOTAL=$(getTotalTxp2p)
 
-            BAKED_BY_ME="no"
-            [ "$BLOCK_PRODUCER" = "$BAKER_PKH" ] && BAKED_BY_ME="yes"
+            if ! [ "$P2P_TX_TOTAL" -eq "$P2P_TX_TOTAL" ] 2>/dev/null; then
+                P2P_TX_TOTAL=0
+            fi
 
-            log "$BLOCK_HASH @ $BLOCK_TIME (${TIME_SINCE_BLOCK}s ago) | att: $ATTESTATION_COUNT | my att: $MY_BAKER_ATTESTED | my bake: $BAKED_BY_ME"
+            if ! [ "$TIME_SINCE_LAST_BLOCK" -eq "$TIME_SINCE_LAST_BLOCK" ] 2>/dev/null; then
+                TIME_SINCE_LAST_BLOCK=0
+            fi
 
-            # --- Attestation Handling ---
-            if [ "$MY_BAKER_ATTESTED" = "yes" ]; then
-                MISSED_ATTESTATION_COUNT=0
+            # Check if the node is behind (not within the acceptable block time)
+            if [ "$TIME_SINCE_LAST_BLOCK" -le "$TIME_TO_WAIT_FOR_BLOCK" ]; then
+                :
+                #log "$(getLastBlockHeaderInfo hash) @ $(getLastBlockHeaderInfo timestamp) ($(getTimeSinceLastBlock) secs ago)"
             else
-                MISSED_ATTESTATION_COUNT=$((MISSED_ATTESTATION_COUNT + 1))
-                log "⚠️ Missed attestation from $BAKER_PKH (missed count: $MISSED_ATTESTATION_COUNT)"
-                if [ "$ALERT_ON_MISSED_ATTESTATIONS" = "true" ]; then
-                    sendEmailAlert "Missed Attestation" "Your baker ($BAKER_PKH) did not attest at level $CURRENT_LEVEL. Missed count: $MISSED_ATTESTATION_COUNT"
-                fi
-                if [ "$MISSED_ATTESTATION_COUNT" -ge "$MAX_MISSED_ATTESTATIONS" ]; then
-                    log "🚨 Missed $MISSED_ATTESTATION_COUNT attestations. Restarting node."
-                    sendEmailAlert "Restarting Node (Attestation Failure)" "Baker missed $MISSED_ATTESTATION_COUNT attestations in a row. Node restart triggered."
-                    systemctl reload-or-restart tezos-node
-                    sleep "$TIME_TO_WAIT_AFTER_RESTART"
-                    MISSED_ATTESTATION_COUNT=0
-                    continue
-                fi
+                log "Node is falling behind. Last block processed: $CURRENT_BLOCK_HASH"
+                # Restart the node if it's falling behind
+                systemctl reload-or-restart octez-node
+                sleep "$TIME_TO_WAIT_AFTER_RESTART"
             fi
 
-            # --- Baking Handling ---
-            if [ "$MY_BAKING_RIGHTS" != "" ]; then
-                if [ "$BAKED_BY_ME" = "yes" ]; then
-                    MISSED_BAKING_COUNT=0
-                else
-                    MISSED_BAKING_COUNT=$((MISSED_BAKING_COUNT + 1))
-                    log "⚠️ Missed baking slot at level $CURRENT_LEVEL (missed count: $MISSED_BAKING_COUNT)"
-                    if [ "$ALERT_ON_MISSED_BAKES" = "true" ]; then
-                        sendEmailAlert "Missed Baking Slot" "Your baker ($BAKER_PKH) missed a baking slot at level $CURRENT_LEVEL. Missed count: $MISSED_BAKING_COUNT"
-                    fi
-                    if [ "$MISSED_BAKING_COUNT" -ge "$MAX_MISSED_BAKES" ]; then
-                        log "🚨 Missed $MISSED_BAKING_COUNT baking slots. Restarting node."
-                        sendEmailAlert "Restarting Node (Baking Failure)" "Baker missed $MISSED_BAKING_COUNT baking slots in a row. Node restart triggered."
-                        systemctl reload-or-restart tezos-node
+            # Check for attestations (or lack thereof)
+            BLOCK_LEVEL=$(get_current_block_height)
+            TARGET_LEVEL=$((BLOCK_LEVEL - BLOCK_OFFSET))
+            RIGHTS=$(get_attestation_rights_count "$TARGET_LEVEL")
+            ATTESTED=$(get_attested_count "$TARGET_LEVEL")
+
+            if ! [ "$RIGHTS" -eq "$RIGHTS" ] 2>/dev/null || ! [ "$ATTESTED" -eq "$ATTESTED" ] 2>/dev/null; then
+                log "Failed to retrieve valid attestation data for level $TARGET_LEVEL ($BLOCK_OFFSET blocks ago)"
+            else
+                log "Attestation slots: $RIGHTS | Attestations injected: $(if [ "$ATTESTED" -gt 0 ]; then echo "Yes"; else echo "No"; fi)"
+
+                if [ "$RIGHTS" -eq 0 ]; then
+                    log "No attestation slots for level $TARGET_LEVEL — nothing to attest."
+                elif [ "$ATTESTED" -eq 0 ]; then
+                    log "No round 0 attestations injected at level $TARGET_LEVEL!"
+                    # Increment the missing attestations count
+                    MISSING_ATTESTATIONS_COUNT=$((MISSING_ATTESTATIONS_COUNT + 1))
+
+                    # If we've missed too many attestations, restart the node
+                    if [ "$MISSING_ATTESTATIONS_COUNT" -ge "$MAX_MISSING_ATTESTATIONS" ]; then
+                        log "Too many missing attestations. Restarting the node!"
+                        systemctl reload-or-restart octez-node
                         sleep "$TIME_TO_WAIT_AFTER_RESTART"
-                        MISSED_BAKING_COUNT=0
-                        continue
+                        MISSING_ATTESTATIONS_COUNT=0  # Reset the counter after restart
                     fi
+                else
+                    log "Attestations injected at level $TARGET_LEVEL ($BLOCK_OFFSET blocks ago): Yes"
+                    # Reset the missing attestations count if attestations were found
+                    MISSING_ATTESTATIONS_COUNT=0
                 fi
             fi
 
-            sleep "$TIME_TO_WAIT_FOR_P2P"
+            # Update LAST_BLOCK_HASH to the current block's hash after processing
+            LAST_BLOCK_HASH="$CURRENT_BLOCK_HASH"
+        fi
 
-        else
-            if [ "$(networkconnected)" = "true" ] && [ "$(rpcserverrunning)" = "true" ]; then
-                log "Looking for p2p
+        # Sleep for half a block time
+        sleep "$((BLOCK_TIME / 2))"
+    done
+else
+    log "RPC server not available. Exiting."
+    exit 1
+fi
+
